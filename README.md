@@ -82,4 +82,27 @@ make
 
 ---
 
+## 💻 Comandos da Shell
+
+O tinyOrangeOS inclui uma shell com suporte a comandos de sistema, gestão de utilizadores e manipulação de ficheiros via **SliceFS**:
+
+| Comando | Descrição | Sintaxe / Exemplo |
+| :--- | :--- | :--- |
+| `help` | Mostra a lista de comandos disponíveis. | `help` |
+| `clear` | Limpa o ecrã do terminal. | `clear` |
+| `neofetch` | Exibe as informações do sistema e o logótipo em Braille. | `neofetch` |
+| `uname` | Mostra a versão do kernel e a arquitetura. | `uname` |
+| `pwd` | Mostra o caminho da diretoria atual. | `pwd` |
+| `ls` | Lista os ficheiros e pastas da diretoria atual. | `ls` |
+| `cd` | Navega entre diretórias (usa `..` para voltar atrás e `/` para a raiz). | `cd <diretoria>`<br>`cd /home/nicolas` |
+| `mkdir` | Cria uma nova diretoria no caminho atual ou num caminho absoluto. | `mkdir <nome_ou_caminho>`<br>`mkdir pasta` |
+| `touch` | Cria um ficheiro de texto vazio. | `touch <nome_do_ficheiro>`<br>`touch notas.txt` |
+| `write` | Escreve texto dentro de um ficheiro existente. | `write <ficheiro> <texto>`<br>`write notas.txt Olá Mundo` |
+| `cat` | Exibe o conteúdo de um ficheiro de texto no ecrã. | `cat <ficheiro>`<br>`cat notas.txt` |
+| `rm` | Remove um ficheiro ou diretoria. | `rm <item>`<br>`rm notas.txt` |
+| `user` | Mostra o utilizador com sessão iniciada ou troca de utilizador. | `user`<br>`user <nome_utilizador>` |
+| `useradd` | Regista um novo utilizador e cria a sua pasta em `/home/` *(apenas root)*. | `useradd` |
+| `format` | Formata a partição do SliceFS e apaga todos os dados do disco `.img`. | `format` |
+| `shutdown` | Sincroniza o SliceFS com o disco e desliga o sistema em segurança. | `shutdown` |
+
 > **Desenvolvido por [Nic24nix](https://github.com/Nic24nix)** 🍊
