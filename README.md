@@ -106,3 +106,10 @@ O tinyOrangeOS inclui uma shell com suporte a comandos de sistema, gestão de ut
 | `shutdown` | Sincroniza o SliceFS com o disco e desliga o sistema em segurança. | `shutdown` |
 
 > **Desenvolvido por [Nic24nix](https://github.com/Nic24nix)** 🍊
+>
+> ---
+>
+> ## 🌿Leaf
+
+Leaf is a text editor software, like nano or vim, for the OrangeOS kernel
+Leaf is currently on development and cannot be used yet
