@@ -113,4 +113,4 @@ O tinyOrangeOS inclui uma shell com suporte a comandos de sistema, gestão de ut
 
 Leaf is a text editor software, like nano or vim, for the OrangeOS kernel
 Leaf is currently on development and cannot be used yet
-UPDATE: leaf is still no ready to use, this update its just for saying, that leag has a strange ass bug that is pissing me off
+UPDATE: Just recoded the entire leaf, its working now with a few mini bugs, expect leaf come soon :)
