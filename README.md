@@ -106,6 +106,7 @@ O tinyOrangeOS inclui uma shell com suporte a comandos de sistema, gestão de ut
 | `rm`       | Remove um ficheiro ou diretoria.                                           | `rm <item>`<br>`rm notas.txt`                             |
 | `user`     | Mostra o utilizador com sessão iniciada ou troca de utilizador.            | `user`<br>`user <nome_utilizador>`                        |
 | `useradd`  | Regista um novo utilizador e cria a sua pasta em `/home/` *(apenas root)*. | `useradd`                                                 |
+| `leaf`     | Abre o editor de texto leaf no arquivo escolhido                           | `leaf <arquivo.txt>`                                      |
 | `format`   | Formata a partição do SliceFS e apaga todos os dados do disco `.img`.      | `format`                                                  |
 | `shutdown` | Sincroniza o SliceFS com o disco e desliga o sistema em segurança.         | `shutdown`                                                |
 
