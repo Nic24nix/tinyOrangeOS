@@ -3074,7 +3074,7 @@ static void neofetch(void)
     print_string_at(
         8,
         57,
-        "OrangeOS v0.4.0",
+        "OrangeOS v0.5.0",
         0x0F
     );
 
@@ -3239,7 +3239,7 @@ static void shell_execute(char *command)
     if (kstrcmp(command, "uname") == 0)
     {
         print(
-            "OrangeOS i386\n"
+            "OrangeOS 0.5.0 i386\n"
         );
 
         return;
