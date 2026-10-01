@@ -77,12 +77,22 @@ make
 
 ## 📁 Estrutura do Repositório
 
-| Ficheiro/Pasta | Descrição                                             |
-| :------------- | :---------------------------------------------------- |
-| `kernel/`      | Código-fonte principal do kernel em C                 |
-| `boot/`        | Código de arranque em Assembly (NASM)                 |
-| `Makefile`     | Script de automatização da compilação                 |
-| `linker.ld`    | Script do linker para organizar as secções de memória |
+O kernel está dividido por responsabilidade. `kernel/kernel.c` coordena a inicialização e liga os módulos; cada pasta mantém a implementação da sua área.
+
+| Pasta / ficheiro | Responsabilidade |
+| :------------- | :------------- |
+| `kernel/kernel.c` | Inicialização e integração dos módulos |
+| `kernel/core/` | Acesso a portas de hardware |
+| `kernel/drivers/` | Console VGA, teclado e disco ATA |
+| `kernel/fs/` | SliceFS e gestão de utilizadores |
+| `kernel/apps/` | Leaf e neofetch |
+| `kernel/shell/` | Shell e encaminhamento de comandos |
+| `kernel/lib/` | Funções de memória e strings |
+| `kernel/timezone.c` | Relógio e fusos horários |
+| `kernel/kernel.h` | Interfaces partilhadas entre módulos |
+| `boot/` | Código de arranque em Assembly |
+| `Makefile` | Compilação e geração da ISO |
+| `linker.ld` | Organização das secções de memória |
 
 ---
 
