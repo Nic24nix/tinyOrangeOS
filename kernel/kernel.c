@@ -2,10 +2,11 @@
 #include "kernel.h"
 #include "timezone.h"
 
-void kernel_main(void)
+void kernel_main(uint32_t multiboot_info)
 {
-    clear_screen();
     timezone_init();
+    desktop_prepare(multiboot_info);
+    clear_screen();
 
     print("\n========================================\n");
     print("             ORANGEOS v0.5.0\n");
@@ -25,9 +26,7 @@ void kernel_main(void)
     print("[ OK ] SliceFS\n");
 
     fs_boot_login_prompt();
-    print("\nOrangeOS pronto!\n");
-    print("Escreve 'help' para ver os comandos.\n");
-    shell();
+    desktop();
 
     for (;;)
         __asm__ volatile ("hlt");

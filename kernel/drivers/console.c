@@ -12,6 +12,17 @@ int cursor_row_hw = 0;
 int cursor_col_hw = 0;
 
 uint8_t current_color = 0x07;
+static int graphics_console_enabled = 0;
+
+void console_set_graphics(int enabled)
+{
+    graphics_console_enabled = enabled;
+}
+
+int console_graphics_active(void)
+{
+    return graphics_console_enabled;
+}
 
 /* =========================================================
    VGA CURSOR
@@ -83,6 +94,12 @@ static void scroll(void)
 void putchar_kernel(char c)
 {
     int pos;
+
+    if (graphics_console_enabled)
+    {
+        console_graphics_putchar(c);
+        return;
+    }
 
     if (c == '\n')
     {
@@ -265,6 +282,12 @@ void clear_screen(void)
     int row;
     int col;
 
+    if (graphics_console_enabled)
+    {
+        console_graphics_clear();
+        return;
+    }
+
     for (row = 0; row < VGA_HEIGHT; row++)
     {
         for (col = 0; col < VGA_WIDTH; col++)
@@ -294,6 +317,12 @@ void print_string_at(
 {
     int i = 0;
 
+    if (graphics_console_enabled)
+    {
+        console_graphics_string_at(row, col, str, color);
+        return;
+    }
+
     if (row < 0 || row >= VGA_HEIGHT)
         return;
 
@@ -316,4 +345,3 @@ void print_string_at(
         i++;
     }
 }
-

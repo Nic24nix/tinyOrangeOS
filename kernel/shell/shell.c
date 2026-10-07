@@ -32,6 +32,25 @@ static void shutdown_system(void)
     }
 }
 
+static char command_lower(char c)
+{
+    if(c>='A'&&c<='Z')return (char)(c-'A'+'a');
+    return c;
+}
+
+static int command_equals(const char *a,const char *b)
+{
+    while(*a&&*b&&command_lower(*a)==command_lower(*b)){a++;b++;}
+    return *a==*b;
+}
+
+static int command_starts(const char *a,const char *prefix,int n)
+{
+    int i;
+    for(i=0;i<n;i++)if(!a[i]||command_lower(a[i])!=command_lower(prefix[i]))return 0;
+    return 1;
+}
+
 /* =========================================================
    SHELL
    ========================================================= */
@@ -48,15 +67,15 @@ static void shell_prompt(void)
     print("$ ");
 }
 
-static void shell_execute(char *command)
+void shell_execute_command(char *command)
 {
-    if (kstrcmp(command, "") == 0)
+    if (command_equals(command, ""))
         return;
 
     /*
      * help
      */
-    if (kstrcmp(command, "help") == 0)
+    if (command_equals(command, "help"))
     {
         print(
             "\n"
@@ -92,7 +111,7 @@ static void shell_execute(char *command)
     /*
      * clear
      */
-    if (kstrcmp(command, "clear") == 0)
+    if (command_equals(command, "clear"))
     {
         clear_screen();
         return;
@@ -101,7 +120,7 @@ static void shell_execute(char *command)
     /*
      * neofetch
      */
-    if (kstrcmp(command, "neofetch") == 0)
+    if (command_equals(command, "neofetch"))
     {
         neofetch();
         return;
@@ -110,7 +129,7 @@ static void shell_execute(char *command)
     /*
      * uname
      */
-    if (kstrcmp(command, "uname") == 0)
+    if (command_equals(command, "uname"))
     {
         print(
             "OrangeOS 0.5.0 i386\n"
@@ -122,7 +141,7 @@ static void shell_execute(char *command)
     /*
      * date setup
      */
-    if (kstrcmp(command, "date setup") == 0)
+    if (command_equals(command, "date setup"))
     {
         print(
             "\n"
@@ -187,7 +206,7 @@ static void shell_execute(char *command)
     /*
      * date
      */
-    if (kstrcmp(command, "date") == 0)
+    if (command_equals(command, "date"))
     {
         DateTime dt;
 
@@ -305,7 +324,7 @@ static void shell_execute(char *command)
     /*
      * ls
      */
-    if (kstrcmp(command, "ls") == 0)
+    if (command_equals(command, "ls"))
     {
         fs_ls();
         return;
@@ -314,7 +333,7 @@ static void shell_execute(char *command)
     /*
      * pwd
      */
-    if (kstrcmp(command, "pwd") == 0)
+    if (command_equals(command, "pwd"))
     {
         fs_pwd();
         return;
@@ -323,8 +342,8 @@ static void shell_execute(char *command)
     /*
      * shutdown
      */
-    if (kstrcmp(command, "shutdown") == 0 ||
-        kstrcmp(command, "bye") == 0)
+    if (command_equals(command, "shutdown") ||
+        command_equals(command, "bye"))
     {
         shutdown_system();
         return;
@@ -333,7 +352,7 @@ static void shell_execute(char *command)
     /*
      * format
      */
-    if (kstrcmp(command, "format") == 0)
+    if (command_equals(command, "format"))
     {
         if (kstrcmp(
                 current_user,
@@ -365,7 +384,7 @@ static void shell_execute(char *command)
     /*
      * user
      */
-    if (kstrcmp(command, "user") == 0)
+    if (command_equals(command, "user"))
     {
         print("Utilizador: ");
         print(current_user);
@@ -381,7 +400,7 @@ static void shell_execute(char *command)
     /*
      * cd
      */
-    if (kstrncmp(command, "cd ", 3) == 0)
+    if (command_starts(command, "cd ", 3))
     {
         fs_cd(command + 3);
         return;
@@ -390,7 +409,7 @@ static void shell_execute(char *command)
     /*
      * mkdir
      */
-    if (kstrncmp(command, "mkdir ", 6) == 0)
+    if (command_starts(command, "mkdir ", 6))
     {
         if (fs_mkdir(command + 6))
             print("Diretorio criado.\n");
@@ -401,7 +420,7 @@ static void shell_execute(char *command)
     /*
      * touch
      */
-    if (kstrncmp(command, "touch ", 6) == 0)
+    if (command_starts(command, "touch ", 6))
     {
         if (fs_touch(command + 6))
             print("Ficheiro criado.\n");
@@ -412,7 +431,7 @@ static void shell_execute(char *command)
     /*
      * cat
      */
-    if (kstrncmp(command, "cat ", 4) == 0)
+    if (command_starts(command, "cat ", 4))
     {
         fs_cat(command + 4);
         return;
@@ -421,7 +440,7 @@ static void shell_execute(char *command)
     /*
      * rm
      */
-    if (kstrncmp(command, "rm ", 3) == 0)
+    if (command_starts(command, "rm ", 3))
     {
         if (fs_rm(command + 3))
             print("Removido.\n");
@@ -432,16 +451,19 @@ static void shell_execute(char *command)
     /*
      * leaf
      */
-    if (kstrncmp(command, "leaf ", 5) == 0)
+    if (command_starts(command, "leaf ", 5))
     {
-        leaf_editor(command + 5);
+        if (console_graphics_active())
+            graphical_leaf_editor(command + 5);
+        else
+            leaf_editor(command + 5);
         return;
     }
 
     /*
      * write
      */
-    if (kstrncmp(command, "write ", 6) == 0)
+    if (command_starts(command, "write ", 6))
     {
         char filename[FS_NAME_LENGTH];
         char content[FS_CONTENT_LENGTH];
@@ -482,7 +504,7 @@ static void shell_execute(char *command)
     /*
      * echo
      */
-    if (kstrncmp(command, "echo ", 5) == 0)
+    if (command_starts(command, "echo ", 5))
     {
         print(command + 5);
         print("\n");
@@ -493,7 +515,7 @@ static void shell_execute(char *command)
     /*
      * useradd
      */
-    if (kstrncmp(command, "useradd ", 8) == 0)
+    if (command_starts(command, "useradd ", 8))
     {
         char username[USERNAME_LENGTH];
         char password[PASSWORD_LENGTH];
@@ -539,7 +561,7 @@ static void shell_execute(char *command)
     /*
      * user <nome>
      */
-    if (kstrncmp(command, "user ", 5) == 0)
+    if (command_starts(command, "user ", 5))
     {
         char username[USERNAME_LENGTH];
 
@@ -652,7 +674,10 @@ void shell(void)
             sizeof(command)
         );
 
-        shell_execute(command);
+        if (command_equals(command, "exit") ||
+            command_equals(command, "desktop"))
+            return;
+
+        shell_execute_command(command);
     }
 }
-

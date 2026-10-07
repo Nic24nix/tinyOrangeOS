@@ -714,6 +714,27 @@ void fs_ls(void)
         print("(vazio)\n");
 }
 
+int fs_list_directory(char names[][FS_NAME_LENGTH], uint8_t *types, int max_entries)
+{
+    int i, count = 0;
+    if (!names || !types || max_entries <= 0)
+        return 0;
+    for (i = 0; i < FS_MAX_FILES && count < max_entries; i++)
+    {
+        int len, start = 0, j;
+        if (file_table[i].type == FS_TYPE_FREE ||
+            kstrcmp(file_table[i].parent, current_directory) != 0)
+            continue;
+        len = kstrlen(file_table[i].name);
+        for (j = 0; j < len; j++)
+            if (file_table[i].name[j] == '/') start = j + 1;
+        kcopy_bounded(names[count], file_table[i].name + start, FS_NAME_LENGTH);
+        types[count] = file_table[i].type;
+        count++;
+    }
+    return count;
+}
+
 /* =========================================================
    PWD
    ========================================================= */
@@ -1260,4 +1281,3 @@ void fs_boot_login_prompt(void)
         "/"
     );
 }
-

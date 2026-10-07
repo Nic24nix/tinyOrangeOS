@@ -92,9 +92,18 @@ void read_line_input(
     while (1)
     {
         uint8_t scancode;
+        uint8_t status = io_inb(KEYBOARD_STATUS_PORT);
 
-        if (!(io_inb(KEYBOARD_STATUS_PORT) & 1))
+        if (!(status & 1))
             continue;
+
+        if (status & 0x20)
+        {
+            int mx=0,my=0;
+            uint8_t buttons=0;
+            (void)mouse_poll(&mx,&my,&buttons,0);
+            continue;
+        }
 
         scancode = io_inb(KEYBOARD_DATA_PORT);
 
@@ -165,7 +174,11 @@ void read_line_input(
                 length--;
                 buffer[length] = '\0';
 
-                if (cursor_col > 0)
+                if (console_graphics_active())
+                {
+                    putchar_kernel('\b');
+                }
+                else if (cursor_col > 0)
                 {
                     cursor_col--;
                     putchar_kernel(' ');
@@ -199,7 +212,17 @@ void read_line_input(
 
 uint8_t keyboard_wait_scancode(void)
 {
-    while (!(io_inb(KEYBOARD_STATUS_PORT) & 1))
-        ;
-    return io_inb(KEYBOARD_DATA_PORT);
+    for (;;)
+    {
+        uint8_t status=io_inb(KEYBOARD_STATUS_PORT);
+        if (!(status&1)) continue;
+        if (status&0x20)
+        {
+            int mx=0,my=0;
+            uint8_t buttons=0;
+            (void)mouse_poll(&mx,&my,&buttons,0);
+            continue;
+        }
+        return io_inb(KEYBOARD_DATA_PORT);
+    }
 }

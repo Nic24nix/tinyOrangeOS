@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include "../kernel.h"
+#include "../fs/slicefs.h"
+#include "../timezone.h"
 
 /* =========================================================
    NEOFETCH
@@ -118,6 +120,28 @@ void neofetch_braille_line(
 
 void neofetch(void)
 {
+    if (console_graphics_active())
+    {
+        /* The graphical terminal is 49 columns by 19 rows, not VGA text mode. */
+        clear_screen();
+        print("OrangeOS neofetch\n");
+        print("-----------------\n");
+        print("OS: OrangeOS 0.5.0 i386\n");
+        print("Kernel: OrangeOS i386\n");
+        print("Shell: OrangeShell\n");
+        print("Filesystem: SliceFS\n");
+        print("Editor: Leaf\n");
+        print("Display: Graphical framebuffer\n");
+        print("User: ");
+        print(current_user);
+        print("\nDirectory: ");
+        print(current_directory);
+        print("\nTimezone: ");
+        print(timezone_get_name());
+        print("\n");
+        return;
+    }
+
     clear_screen();
 
     /*
@@ -289,4 +313,3 @@ void neofetch(void)
 
     update_cursor();
 }
-

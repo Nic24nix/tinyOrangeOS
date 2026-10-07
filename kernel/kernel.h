@@ -28,6 +28,11 @@ void putchar_kernel(char c);
 void print(const char *str);
 void print_int(uint32_t value);
 void clear_screen(void);
+void console_set_graphics(int enabled);
+int console_graphics_active(void);
+void console_graphics_putchar(char c);
+void console_graphics_clear(void);
+void console_graphics_string_at(int row, int col, const char *str, uint8_t color);
 void read_line_input(char *buffer, int max_len);
 void leaf_editor(const char *filename);
 void neofetch(void);
@@ -54,7 +59,13 @@ int ata_write_sector(uint32_t lba, const uint8_t *buffer);
 void fs_init(void);
 void fs_boot_login_prompt(void);
 void shell(void);
+void shell_execute_command(char *command);
+void desktop_prepare(uint32_t multiboot_info);
+void desktop(void);
+void graphical_leaf_editor(const char *filename);
+void mouse_init(void);
+int mouse_poll(int *x, int *y, uint8_t *buttons, int *wheel);
 
-void kernel_main(void);
+void kernel_main(uint32_t multiboot_info);
 
 #endif

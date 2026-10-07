@@ -2,6 +2,11 @@
 #include "../kernel.h"
 #include "../fs/slicefs.h"
 
+static int leaf_columns(void)
+{
+    return console_graphics_active() ? 49 : VGA_WIDTH;
+}
+
 /* =========================================================
    LEAF CURSOR POSITION
    ========================================================= */
@@ -30,9 +35,9 @@ static void leaf_get_cursor_xy(
         {
             c += 4;
 
-            while (c >= VGA_WIDTH)
+            while (c >= leaf_columns())
             {
-                c -= VGA_WIDTH;
+                c -= leaf_columns();
                 r++;
             }
         }
@@ -40,7 +45,7 @@ static void leaf_get_cursor_xy(
         {
             c++;
 
-            if (c >= VGA_WIDTH)
+            if (c >= leaf_columns())
             {
                 c = 0;
                 r++;
@@ -57,8 +62,8 @@ static void leaf_get_cursor_xy(
     if (r > 20)
         r = 20;
 
-    if (c >= VGA_WIDTH)
-        c = VGA_WIDTH - 1;
+    if (c >= leaf_columns())
+        c = leaf_columns() - 1;
 
     *row = r;
     *col = c;
@@ -107,9 +112,9 @@ static int leaf_find_position(
         {
             col += 4;
 
-            while (col >= VGA_WIDTH)
+            while (col >= leaf_columns())
             {
-                col -= VGA_WIDTH;
+                col -= leaf_columns();
                 line++;
             }
         }
@@ -117,7 +122,7 @@ static int leaf_find_position(
         {
             col++;
 
-            if (col >= VGA_WIDTH)
+            if (col >= leaf_columns())
             {
                 col = 0;
                 line++;
@@ -144,13 +149,43 @@ static void redraw_leaf_text(
 
     length = kstrlen(buffer);
 
+    if (console_graphics_active())
+    {
+        char view[15][50];
+        int line=0, column=0, i;
+        for(row=0;row<15;row++){
+            for(col=0;col<49;col++)view[row][col]=' ';
+            view[row][49]='\0';
+        }
+        for(i=0;i<length&&line<15;i++){
+            char ch=buffer[i];
+            if(ch=='\n'){line++;column=0;continue;}
+            if(ch=='\t'){
+                int spaces=4;
+                while(spaces--&&line<15){view[line][column++]=' ';if(column>=49){column=0;line++;}}
+                continue;
+            }
+            view[line][column++]=(ch>=32&&ch<=126)?ch:'?';
+            if(column>=49){column=0;line++;}
+        }
+        leaf_get_cursor_xy(buffer,cursor_pos,&row,&col);
+        if(row<15&&col<49)view[row][col]='_';
+        print_string_at(0,0," tinyLeaf - OrangeOS Text Editor",0x0F);
+        print_string_at(1,0," Ctrl+S Save   Ctrl+Q Exit",0x07);
+        for(i=0;i<15;i++)print_string_at(i+2,0,view[i],0x07);
+        print_string_at(17,0,"Editing in graphical terminal",0x07);
+        if(row>14)row=14;
+        print_string_at(row+2,col,"",0x0F);
+        return;
+    }
+
     /*
      * Limpar área de edição:
      * linhas 2..22
      */
     for (row = 2; row < 23; row++)
     {
-        for (col = 0; col < VGA_WIDTH; col++)
+        for (col = 0; col < leaf_columns(); col++)
         {
             int pos =
                 (row * VGA_WIDTH + col) * 2;
@@ -183,7 +218,7 @@ static void redraw_leaf_text(
 
             while (spaces--)
             {
-                if (col >= VGA_WIDTH)
+                if (col >= leaf_columns())
                 {
                     col = 0;
                     row++;
@@ -218,7 +253,7 @@ static void redraw_leaf_text(
 
         col++;
 
-        if (col >= VGA_WIDTH)
+        if (col >= leaf_columns())
         {
             col = 0;
             row++;
@@ -244,10 +279,11 @@ static void redraw_leaf_text(
         if (cursor_r >= 23)
             cursor_r = 22;
 
-        cursor_row_hw = cursor_r;
-        cursor_col_hw = cursor_c;
-
-        update_cursor();
+        if(!console_graphics_active()){
+            cursor_row_hw = cursor_r;
+            cursor_col_hw = cursor_c;
+            update_cursor();
+        }
     }
 }
 
@@ -743,4 +779,3 @@ void leaf_editor(
 
     clear_screen();
 }
-

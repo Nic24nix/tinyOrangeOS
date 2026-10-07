@@ -16,10 +16,12 @@ KERNEL_OBJ = \
 	kernel/lib/string.o \
 	kernel/drivers/console.o \
 	kernel/drivers/keyboard.o \
+	kernel/drivers/mouse.o \
 	kernel/drivers/ata.o \
 	kernel/fs/slicefs.o \
 	kernel/apps/leaf.o \
 	kernel/apps/neofetch.o \
+	kernel/apps/desktop.o \
 	kernel/shell/shell.o \
 	kernel/timezone.o
 

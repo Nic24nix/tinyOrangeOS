@@ -14,6 +14,7 @@ int fs_save_table(void);
 int fs_touch(const char *input);
 int fs_mkdir(const char *input);
 void fs_ls(void);
+int fs_list_directory(char names[][FS_NAME_LENGTH], uint8_t *types, int max_entries);
 void fs_pwd(void);
 int fs_cd(const char *input);
 int fs_write(const char *input, const char *content);
