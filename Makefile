@@ -1,4 +1,4 @@
-TARGET = tinyOrangeOS-v0.4.0-i386
+TARGET = tinyOrangeOS-v0.5.0-i386
 ISO = $(TARGET).iso
 
 CC = gcc
@@ -71,7 +71,7 @@ iso/boot/grub/grub.cfg:
 		'}' > iso/boot/grub/grub.cfg
 
 $(ISO): iso/boot/kernel.bin iso/boot/grub/grub.cfg
-	grub-mkrescue -o $(ISO) iso
+	grub2-mkrescue -o $(ISO) iso
 
 clean:
 	rm -f boot/boot.o
