@@ -154,7 +154,6 @@ O Orange Desktop é o mais novo desktop environment do **tinyOrangeOS**
 * 📝 **Mouse:** com ele tras suporte a drivers para o mouse.
 * ⌨ **Terminal:** um terminal grafico
 * 📜 **gestor de arquivos:** um gestor de arquivos grafico
-* ↔ **Navegação precisa:** Suporte para navegação através das teclas de seta.
 
 ### Barra de tarefas
 
