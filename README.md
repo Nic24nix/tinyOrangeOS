@@ -144,4 +144,23 @@ O tinyLeaf está atualmente em desenvolvimento ativo, com novas funcionalidades 
 
 ---
 
+
+## ORANGE DESKTOP
+
+O Orange Desktop é o mais novo desktop environment do **tinyOrangeOS**
+
+### ✨ Oque ele traz?
+
+* 📝 **Mouse:** com ele tras suporte a drivers para o mouse.
+* ⌨ **Terminal:** um terminal grafico
+* 📜 **gestor de arquivos:** um gestor de arquivos grafico
+* ↔ **Navegação precisa:** Suporte para navegação através das teclas de seta.
+
+### Barra de tarefas
+
+na barra de tarefas existe:
+
+* **Menu iniciar:** No menu iniciar tem: abridor de apps como, o terminal ou o gestor de arquivos, botão de desligar e o terminal only mode
+* **Terminal only:** Um modo aonde o desktop é subsituido por um terminal
+
 > **Desenvolvido por [Nic24nix](https://github.com/Nic24nix)** 🍊
